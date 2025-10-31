@@ -1,70 +1,49 @@
 #include <iostream>
-#include <string>
 
-using namespace std;
+#include "HashMap.h"
+#include "Container.h"
 
-void printHelp()
-{
-    cout << "Supported list of commands: " << endl;
-    cout << " 1. find <inventoryid> - Finds if the inventory exists. If exists, prints details. If not, prints 'Inventory not found'." << endl;
-    cout << " 2. listInventory <category_string> - Lists just the id and name of all inventory belonging to the specified category. If the category doesn't exists, prints 'Invalid Category'.\n"
-         << endl;
-    cout << " Use :quit to quit the REPL" << endl;
-}
+//It rests upon the user that the .csv that they wish to read from exists in the same folder as this code and that the
+// below string matches the name of the file exactly
+std::string const FILENAME = "marketing_sample.csv";
 
-bool validCommand(string line)
-{
-    return (line == ":help") ||
-           (line.rfind("find", 0) == 0) ||
-           (line.rfind("listInventory") == 0);
-}
+int main() {
+    int user_choice = -1;
+    std::string user_string = "";
+    Container my_container(FILENAME);
 
-void evalCommand(string line)
-{
-    if (line == ":help")
-    {
-        printHelp();
-    }
-    // if line starts with find
-    else if (line.rfind("find", 0) == 0)
-    {
-        // Look up the appropriate datastructure to find if the inventory exist
-        cout << "YET TO IMPLEMENT!" << endl;
-    }
-    // if line starts with listInventory
-    else if (line.rfind("listInventory") == 0)
-    {
-        // Look up the appropriate datastructure to find all inventory belonging to a specific category
-        cout << "YET TO IMPLEMENT!" << endl;
-    }
-}
+    Container_Tests my_test_container;
+    my_test_container.do_all_tests();
 
-void bootStrap()
-{
-    cout << "\n Welcome to Amazon Inventory Query System" << endl;
-    cout << " enter :quit to exit. or :help to list supported commands." << endl;
-    cout << "\n> ";
-    // TODO: Do all your bootstrap operations here
-    // example: reading from CSV and initializing the data structures
-    // Don't dump all code into this single function
-    // use proper programming practices
-}
+    my_container.import_data();
 
-int main(int argc, char const *argv[])
-{
-    string line;
-    bootStrap();
-    while (getline(cin, line) && line != ":quit")
-    {
-        if (validCommand(line))
-        {
-            evalCommand(line);
+    do {
+
+        std::cout << "1. Search by product ID " << std::endl << "2. Search by product category" << std::endl << "3. Exit" << std::endl;
+
+        do {
+            std::cin >> user_choice;
+        } while(user_choice < 1 || user_choice > 3);
+
+        if(user_choice == 1) {
+            std::cout << "Product ID to search for: ";
+
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            getline(std::cin, user_string);
+
+            my_container.find(user_string);
+
+        } else if (user_choice == 2) {
+            std::cout << "Product category to search for: ";
+
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            getline(std::cin, user_string);
+
+            my_container.list_inventory(user_string);
         }
-        else
-        {
-            cout << "Command not supported. Enter :help for list of supported commands" << endl;
-        }
-        cout << "> ";
-    }
+
+    } while(user_choice != 3);
+
+
     return 0;
 }

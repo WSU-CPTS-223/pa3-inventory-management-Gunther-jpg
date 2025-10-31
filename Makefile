@@ -1,10 +1,7 @@
-out: clean compile execute
+TARGET = PA3
+SOURCE = $(wildcard *.cpp)
 
-compile: main.cpp
-	g++ -g -Wall -std=c++14 main.cpp -o mainexe
-
-execute: mainexe
-	./mainexe
-
+$(TARGET): $(SOURCE)
+	g++ -std=c++11 -Wall -g $(SOURCE) -o $(TARGET)
 clean:
-	rm -f mainexe
+	rm -f $(TARGET)
